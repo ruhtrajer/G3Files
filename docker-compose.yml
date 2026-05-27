@@ -1,0 +1,9 @@
+services:
+  g3files:
+    build: .
+    ports:
+      - "9929:9929"
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+    volumes:
+      - ./shared:/app/shared

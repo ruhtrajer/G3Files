@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="refresh" content="10">
+    <title>G3Files</title>
+</head>
+<body>
+    <h1>G3Files — Fichiers partagés</h1>
+
+    <hr>
+
+    <p><a href="{{ url_for('admin_index') }}">Administration</a></p>
+
+    <hr>
+
+    {% if not dirs and not files %}
+    <p><em>Aucun fichier partagé pour le moment.</em></p>
+    {% endif %}
+
+    {% if dirs or files %}
+    <table border="1" cellpadding="4" cellspacing="0" width="100%">
+        <tr>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Taille</th>
+            <th>Téléchargement</th>
+        </tr>
+        {% for d in dirs %}
+        <tr>
+            <td><strong>{{ d.name }}/</strong></td>
+            <td>Dossier</td>
+            <td align="right">—</td>
+            <td align="center"><a href="{{ url_for('download', filename=d.name) }}">&#128229; Télécharger (.tar.gz)</a></td>
+        </tr>
+        {% endfor %}
+        {% for f in files %}
+        {% set size = f.stat().st_size %}
+        <tr>
+            <td>{{ f.name }}</td>
+            <td>Fichier</td>
+            <td align="right">
+                {% if size < 1024 %}
+                    {{ size }} o
+                {% elif size < 1048576 %}
+                    {{ (size / 1024)|round(1) }} Ko
+                {% elif size < 1073741824 %}
+                    {{ (size / 1048576)|round(1) }} Mo
+                {% else %}
+                    {{ (size / 1073741824)|round(1) }} Go
+                {% endif %}
+            </td>
+            <td align="center"><a href="{{ url_for('download', filename=f.name) }}">&#128229; Télécharger</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <hr>
+
+    <p><em>Cette page se rafraîchit automatiquement toutes les 10 secondes.</em></p>
+
+</body>
+</html>
